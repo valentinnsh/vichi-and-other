@@ -1,6 +1,5 @@
 module solve_methods
   use my_prec
-  real(mp), parameter :: eps = 10e-8
 contains
 
   ! Процедура, проверяющая диагональное преобладание в матрице
