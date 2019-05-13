@@ -42,8 +42,7 @@ program Task_1
 
   id = 200
   open(id, file = 'result.dat')
-  call print_matrix(id,n,decA)
-  write(id,*) 'check:'
+  write(id,*) 'check LU - PA = :'
   call print_matrix(id,n,matmul(L,U)-matmul(P,A))
   !call print_matrix(id,n,P)
   close(id)

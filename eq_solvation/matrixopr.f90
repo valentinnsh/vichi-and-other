@@ -35,8 +35,6 @@ contains
     do j = 1,n
 
        ! Выбор ведущего элемента в j-м столбце !
-       write(*,*) abs(maxval(decA(j:n,j)))
-       write(*,*) abs(minval(decA(j:n,j)))
 
        if(abs(maxval(decA(j:n,j))) < abs(minval(decA(j:n,j)))) then
           maxel_loc = minloc(decA(j:n,j)) + j-1
@@ -44,12 +42,7 @@ contains
           maxel_loc = maxloc(decA(j:n,j)) + j-1
        end if
 
-       write(*,*) maxel_loc(1)
-
-
-
        if(maxel_loc(1) .ne. j) then
-          write(*,*) 'swap'
           ! меняем местами j-ю и maxel_loc строчки !
           swaps = swaps*(-1)
           do i = 1,n
