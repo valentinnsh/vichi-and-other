@@ -28,6 +28,7 @@ contains
     real(mp) :: tmp
     integer(mp) :: swaps, i, j, n
 
+    swaps = 1
     n = size(decA(1,:))
     P = 0
     forall(i = 1:n) P(i,i) = 1
@@ -63,7 +64,27 @@ contains
           end do
        end do
     end do
-
   end subroutine decompose_LU
+
+  function determinant(A) result(det)
+    real(mp), dimension(:,:) :: A
+    real(mp), allocatable, dimension(:,:) :: decA, P
+    real(mp) :: det
+    integer(mp) :: swaps, i, j, n
+
+    n = size(A(1,:))
+
+    allocate(decA(n,n))
+    allocate(P(n,n))
+
+    decA = A; P = 0;
+    call decompose_LU(decA, P, swaps)
+
+    det = swaps
+    do i = 1,n
+       det = det*decA(i,i)
+    end do
+
+  end function determinant
 
 end module matrixopr

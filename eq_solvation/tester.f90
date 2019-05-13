@@ -44,6 +44,7 @@ program Task_1
   open(id, file = 'result.dat')
   write(id,*) 'check LU - PA = :'
   call print_matrix(id,n,matmul(L,U)-matmul(P,A))
+  write(id,*) 'det(A) = ', determinant(A)
   !call print_matrix(id,n,P)
   close(id)
 
