@@ -1,5 +1,5 @@
 module matrixopr
-  use my_pec
+  use my_prec
 contains
   ! Процедуры для ввода - вывода квадратных матриц !
   subroutine print_matrix(id, n, matrix)
@@ -24,29 +24,32 @@ contains
   ! swaps - значение четности числа перестановок  !
   subroutine decompose_LU(decA, P, swaps)
     real(mp), dimension(:,:) :: decA, P
-    real(mp), dimension(1:2) :: maxel_loc
-    real(mp), dimension(:,:) :: tmp
+    integer(mp) :: maxel_loc(1)
+    real(mp) :: tmp
     integer(mp) :: swaps, i, j, n
 
-    n = size(A)
+    n = size(decA(1,:))
     P = 0
     forall(i = 1:n) P(i,i) = 1
 
     do j = 1,n
-       do i = 1,n
-          do k = 1, min(i,j) - 1
-             decA(i,j) = decA(i,j) - decA(i,k)*decA(k,j)
-          end do
-       end do
 
        ! Выбор ведущего элемента в j-м столбце !
-       if(abs(maxval(decA(j:n,j))) < abs(minval(decA(j:k,j)))) then
-          maxel_loc = maxloc(decA(j:n,j))
+       write(*,*) abs(maxval(decA(j:n,j)))
+       write(*,*) abs(minval(decA(j:n,j)))
+
+       if(abs(maxval(decA(j:n,j))) < abs(minval(decA(j:n,j)))) then
+          maxel_loc = minloc(decA(j:n,j)) + j-1
        else
-          maxel_loc = minloc(decA(j:n,j))
+          maxel_loc = maxloc(decA(j:n,j)) + j-1
        end if
 
+       write(*,*) maxel_loc(1)
+
+
+
        if(maxel_loc(1) .ne. j) then
+          write(*,*) 'swap'
           ! меняем местами j-ю и maxel_loc строчки !
           swaps = swaps*(-1)
           do i = 1,n
@@ -60,7 +63,12 @@ contains
           end do
        end if
 
-       forall(i = j+1:n) decA(i,j) = decA(i,j)/decA(j,j)
+       do i = j+1, n
+          decA(i,j) = decA(i,j)/decA(j,j)
+          do k = j+1,n
+             decA(i,k) = decA(i,k) - decA(i,j)*decA(j,k)
+          end do
+       end do
     end do
 
   end subroutine decompose_LU
