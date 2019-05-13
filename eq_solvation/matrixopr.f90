@@ -66,6 +66,7 @@ contains
     end do
   end subroutine decompose_LU
 
+  ! Функция, считающая определитель с помощью LUP разложения !
   function determinant(A) result(det)
     real(mp), dimension(:,:) :: A
     real(mp), allocatable, dimension(:,:) :: decA, P
@@ -87,4 +88,38 @@ contains
 
   end function determinant
 
+  subroutine solve_eq_sys(A, B, X)
+    real(mp), dimension(:,:) :: A
+    real(mp), dimension(:) :: B, X
+    real(mp), allocatable, dimension(:) :: decB
+    real(mp), allocatable, dimension(:,:) :: decA, P
+    real(mp) :: det
+    integer(mp) :: swaps, i, j, n
+
+    n = size(A(1,:))
+
+    allocate(decA(n,n)); allocate(P(n,n));
+    allocate(decB(n))
+
+    decA = A; P = 0;
+    call decompose_LU(decA, P, swaps)
+    decB = matmul(P,B)
+
+    ! первый шаг - прямая подстановка !
+    do i = 1, n
+       X(i) = decB(i)
+       do j = 1, i-1
+          X(i) = X(i) - X(j)*decA(i,j)
+       end do
+    end do
+
+    ! обратная подстановка !
+    do i = n, 1, -1
+       do j = n, i+1, -1
+          X(i) = X(i) - X(j)*decA(i,j)
+       end do
+       X(i) = X(i)/decA(i,i)
+    end do
+
+  end subroutine solve_eq_sys
 end module matrixopr

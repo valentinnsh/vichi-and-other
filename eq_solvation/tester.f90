@@ -10,6 +10,7 @@ program Task_1
   implicit none
 
   real(mp), allocatable, dimension(:,:) :: A, decA, P, L, U
+  real(mp), allocatable, dimension(:) :: B,X
   real(mp) :: tmp
   integer(mp) ::  i, j, n, id, swaps
 
@@ -17,11 +18,15 @@ program Task_1
   open(id, file='data.dat')
   read(id,'(2x,I6)') n
 
+  allocate(B(n)); allocate(X(n))
   allocate(A(n,n)); allocate(decA(n,n))
   allocate(P(n,n)); allocate(L(n,n)); allocate(U(n,n))
-  L = 0; U = 0; decA = 0; P = 0; A = 0
+  L = 0; U = 0; decA = 0; P = 0; A = 0; X = 0;
 
   call read_matrix(id, n, A)
+  do i=1,n
+     read(100,*) B(i)
+  end do
   close(id)
 
   decA = A
@@ -45,6 +50,10 @@ program Task_1
   write(id,*) 'check LU - PA = :'
   call print_matrix(id,n,matmul(L,U)-matmul(P,A))
   write(id,*) 'det(A) = ', determinant(A)
+
+  call solve_eq_sys(A,B,X)
+
+  write(id,*) 'Ax-b = ', matmul(A,X) - B
   !call print_matrix(id,n,P)
   close(id)
 
