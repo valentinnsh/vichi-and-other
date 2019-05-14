@@ -51,10 +51,16 @@ program Task_1
   call print_matrix(id,n,matmul(L,U)-matmul(P,A))
   write(id,*) 'det(A) = ', determinant(A)
 
-  call solve_eq_sys(A,B,X)
+  call solve_eq_sys(decA, P, B,X)
 
   write(id,*) 'Ax-b = ', matmul(A,X) - B
   !call print_matrix(id,n,P)
+
+  write(id,*) 'A**-1*A = '
+  call print_matrix(id,n, matmul(invert_matrix(decA,P),A))
+
+  write(id,*) 'A*A**-1 = '
+  call print_matrix(id,n, matmul(A,invert_matrix(decA,P)))
   close(id)
 
 end program Task_1

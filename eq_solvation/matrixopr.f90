@@ -88,21 +88,16 @@ contains
 
   end function determinant
 
-  subroutine solve_eq_sys(A, B, X)
-    real(mp), dimension(:,:) :: A
+  subroutine solve_eq_sys(decA, P, B, X)
+    real(mp), dimension(:,:) :: decA, P
     real(mp), dimension(:) :: B, X
     real(mp), allocatable, dimension(:) :: decB
-    real(mp), allocatable, dimension(:,:) :: decA, P
     real(mp) :: det
     integer(mp) :: swaps, i, j, n
 
-    n = size(A(1,:))
+    n = size(decA(1,:))
 
-    allocate(decA(n,n)); allocate(P(n,n));
     allocate(decB(n))
-
-    decA = A; P = 0;
-    call decompose_LU(decA, P, swaps)
     decB = matmul(P,B)
 
     ! первый шаг - прямая подстановка !
@@ -120,6 +115,27 @@ contains
        end do
        X(i) = X(i)/decA(i,i)
     end do
-
   end subroutine solve_eq_sys
+
+  function invert_matrix(decA, P) result(inv)
+    real(mp), dimension(:,:) :: decA, P
+    real(mp), allocatable,dimension(:,:) :: inv
+    real(mp), allocatable, dimension(:) :: B, X
+    real(mp), allocatable, dimension(:) :: decB
+    integer(mp) ::  i, j, n
+
+    n = size(decA(1,:))
+    allocate(B(n)); allocate(X(n));
+    allocate(inv(n,n))
+    do i = 1,n
+       B = 0;
+       B(i) = 1
+
+       call solve_eq_sys(decA,P,B,X)
+       do j = 1,n
+          inv(j,i) = X(j)
+       end do
+    end do
+  end function invert_matrix
+
 end module matrixopr
