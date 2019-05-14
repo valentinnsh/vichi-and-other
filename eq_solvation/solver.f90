@@ -18,7 +18,7 @@ contains
   end subroutine check_diagonal_dominance
 
   !------------------Метод Якоби------------------------------!
-  subroutine jakob_method(A, B, n, X)
+  subroutine jakob_method(A, B, X)
     integer(mp) :: i, j, n
     real(mp) ::  norm_x ! норма разности X на к-м и (к-1)-м шаге
     real(mp), dimension(:,:) :: A
@@ -27,6 +27,7 @@ contains
     real(mp), allocatable, dimension(:,:) ::  Z
 
     call check_diagonal_dominance(A,n)
+    n = size(A(1,:))
 
     allocate(Z(n,n))
     allocate(G(n))
@@ -53,7 +54,7 @@ contains
   end subroutine jakob_method
 
   !------------------Метод Зейделя----------------------------!
-  subroutine seidel_method(A,B,n,X)
+  subroutine seidel_method(A,B,X)
     integer(mp) ::  i, j, n
     real(mp) ::  norm_x ! норма разности X на к-м и (к-1)-м шаге
     real(mp), dimension(:,:) :: A
@@ -61,10 +62,13 @@ contains
     real(mp), allocatable, dimension(:) :: Q, prevX
     real(mp), allocatable, dimension(:,:) ::  P
 
+    n = size(A(1,:))
+
     call check_diagonal_dominance(A,n)
     allocate(Q(n))
     allocate(P(n,n))
     allocate(prevX(n))
+
 
     forall(i = 1:n, j = 1:n) P(i,j) = -A(i,j)/A(i,i)
     forall(i = 1:n) Q(i) = B(i)/A(i,i)

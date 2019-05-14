@@ -6,7 +6,10 @@ contains
     integer(mp) :: id, i, n
     real(mp), dimension(:,:) :: matrix
     do i = 1, n
-       write(id, *) matrix(i, 1:n)
+       do j = 1,n
+          write(id, '(F16.8)', advance="no") matrix(i, j)
+       end do
+       write(id,*) ''
     end do
   end subroutine print_matrix
 

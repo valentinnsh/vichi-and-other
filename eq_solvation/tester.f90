@@ -59,7 +59,7 @@ program Task_1
   write(id,*) 'A**-1*A = '
   call print_matrix(id,n, matmul(invert_matrix(decA,P),A))
 
-  write(id,*) 'A*A**-1 = '
+  write(id, *) 'A*A**-1 = '
   call print_matrix(id,n, matmul(A,invert_matrix(decA,P)))
   close(id)
 
