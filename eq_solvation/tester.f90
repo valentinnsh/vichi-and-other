@@ -7,14 +7,17 @@ program Task_1
   use my_prec
   use matrixopr
   use solve_methods
+  use makedata
   implicit none
 
   real(mp), allocatable, dimension(:,:) :: A, decA, P, L, U
   real(mp), allocatable, dimension(:) :: B,X
   real(mp) :: tmp
-  integer(mp) ::  i, j, n, id, swaps
+  integer(mp) ::  i, j, n, id, swaps, size, q
 
   id = 100
+  size = 5
+  call make_data(size)
   open(id, file='data.dat')
   read(id,'(2x,I6)') n
 
@@ -25,7 +28,7 @@ program Task_1
 
   call read_matrix(id, n, A)
   do i=1,n
-     read(100,*) B(i)
+     read(id,*) B(i)
   end do
   close(id)
 
@@ -65,5 +68,20 @@ program Task_1
   write(id, *) 'condition number = ||A||*||A**-1|| = ', condition_number(A,invert_matrix(decA,P))
 
   close(id)
+
+  size = 5; q = 4
+  call make_diag_data(size,q)
+
+  open(id, file='data_diag.dat')
+  read(id,'(2x,I6)') n
+
+  call read_matrix(id, n, A)
+  do i=1,n
+     read(id,*) B(i)
+  end do
+  close(id)
+  X = 0
+
+
 
 end program Task_1
