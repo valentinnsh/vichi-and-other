@@ -11,7 +11,7 @@ program Task_1
   implicit none
 
   real(mp), allocatable, dimension(:,:) :: A, decA, P, L, U
-  real(mp), allocatable, dimension(:) :: B,X,X_j
+  real(mp), allocatable, dimension(:) :: B,X,X_j,X_s
   real(mp) :: tmp
   integer(mp) ::  i, j, n, id, swaps, size, q
 
@@ -21,7 +21,7 @@ program Task_1
   open(id, file='data.dat')
   read(id,'(2x,I6)') n
 
-  allocate(B(n)); allocate(X(n)); allocate(X_j(n))
+  allocate(B(n)); allocate(X(n)); allocate(X_j(n)); allocate(X_s(n))
   allocate(A(n,n)); allocate(decA(n,n))
   allocate(P(n,n)); allocate(L(n,n)); allocate(U(n,n))
   L = 0; U = 0; decA = 0; P = 0; A = 0; X = 0;
@@ -78,17 +78,20 @@ program Task_1
   end do
   close(id)
   X = 0
-
   open(id, file='iter_result.dat')
 
   call jakob_method(A,B,X_j)
-
-  L = 0; U = 0; decA = 0; P = 0; A = 0; X = 0;
+  call seidel_method(A,B,X_s)
+  L = 0; U = 0; decA = 0; P = 0; X = 0;
   decA = A
   call decompose_LU(decA, P, swaps)
   call solve_eq_sys(decA, P, B,X)
 
-  write(id,*) 'разность решений якобе и через LUP-разложение = ', X - X_j
+  write(id,*) 'разность решений якобе и через LUP-разложение = '
+  write(id,'(F16.8)') X-X_j
+
+  write(id,*) 'разность решений зейделя и через LUP-разложение = '
+  write(id,'(F16.8)') X-X_s
 
 
 end program Task_1
