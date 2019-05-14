@@ -59,6 +59,7 @@ contains
     do i = 1, n
        write(id, '(F16.8)') vector(i)
     end do
+
     close(id)
 
     deallocate(matrix)

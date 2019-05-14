@@ -11,7 +11,7 @@ program Task_1
   implicit none
 
   real(mp), allocatable, dimension(:,:) :: A, decA, P, L, U
-  real(mp), allocatable, dimension(:) :: B,X
+  real(mp), allocatable, dimension(:) :: B,X,X_j
   real(mp) :: tmp
   integer(mp) ::  i, j, n, id, swaps, size, q
 
@@ -21,7 +21,7 @@ program Task_1
   open(id, file='data.dat')
   read(id,'(2x,I6)') n
 
-  allocate(B(n)); allocate(X(n))
+  allocate(B(n)); allocate(X(n)); allocate(X_j(n))
   allocate(A(n,n)); allocate(decA(n,n))
   allocate(P(n,n)); allocate(L(n,n)); allocate(U(n,n))
   L = 0; U = 0; decA = 0; P = 0; A = 0; X = 0;
@@ -44,9 +44,6 @@ program Task_1
         U(i,j) = decA(i,j)
      end do
   end do
-
-
-
 
   id = 200
   open(id, file = 'result.dat')
@@ -82,6 +79,16 @@ program Task_1
   close(id)
   X = 0
 
+  open(id, file='iter_result.dat')
+
+  call jakob_method(A,B,X_j)
+
+  L = 0; U = 0; decA = 0; P = 0; A = 0; X = 0;
+  decA = A
+  call decompose_LU(decA, P, swaps)
+  call solve_eq_sys(decA, P, B,X)
+
+  write(id,*) 'разность решений якобе и через LUP-разложение = ', X - X_j
 
 
 end program Task_1
