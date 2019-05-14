@@ -7,17 +7,14 @@ program Task_1
   use my_prec
   use matrixopr
   use solve_methods
-  use makedata
   implicit none
 
   real(mp), allocatable, dimension(:,:) :: A, decA, P, L, U
   real(mp), allocatable, dimension(:) :: B,X
   real(mp) :: tmp
-  integer(mp) ::  i, j, n, id, swaps, size
+  integer(mp) ::  i, j, n, id, swaps
 
   id = 100
-  size = 5
-  call make_data(size)
   open(id, file='data.dat')
   read(id,'(2x,I6)') n
 
@@ -64,6 +61,9 @@ program Task_1
 
   write(id, *) 'A*A**-1 = '
   call print_matrix(id,n, matmul(A,invert_matrix(decA,P)))
+
+  write(id, *) 'condition number = ||A||*||A**-1|| = ', condition_number(A,invert_matrix(decA,P))
+
   close(id)
 
 end program Task_1

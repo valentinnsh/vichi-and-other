@@ -120,6 +120,7 @@ contains
     end do
   end subroutine solve_eq_sys
 
+  ! Функция обращения матрицы. На вход подаются результаты LU разложения !
   function invert_matrix(decA, P) result(inv)
     real(mp), dimension(:,:) :: decA, P
     real(mp), allocatable,dimension(:,:) :: inv
@@ -140,5 +141,29 @@ contains
        end do
     end do
   end function invert_matrix
+
+  ! Нахлждение числа обусловленности матрицы !
+  function condition_number(A,invA) result(cond)
+    real(mp), dimension(:,:) :: A, invA
+    real(mp) :: cond, tmpQ, tmpI, normA, normInv
+    integer(mp) ::  i, j, n
+
+    n = size(A(1,:))
+    cond = 0; normInv = 0; normA = 0;
+
+    do i = 1,n
+       tmpA = 0
+       tmpI = 0
+       do j = 1,n
+          tmpA = tmpA + abs(A(i,j))**2
+          tmpI = tmpI + abs(invA(i,j))**2
+       end do
+       normA = normA + sqrt(tmpA)
+       normInv = normInv + sqrt(tmpI)
+    end do
+
+    cond = normInv*normA
+  end function condition_number
+
 
 end module matrixopr
