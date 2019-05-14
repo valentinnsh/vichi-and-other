@@ -26,8 +26,8 @@ contains
     real(mp), allocatable, dimension(:) :: G
     real(mp), allocatable, dimension(:,:) ::  Z
 
-    call check_diagonal_dominance(A,n)
     n = size(A(1,:))
+    call check_diagonal_dominance(A,n)
 
     allocate(Z(n,n))
     allocate(G(n))
