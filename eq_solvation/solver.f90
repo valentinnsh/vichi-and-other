@@ -1,5 +1,6 @@
 module solve_methods
   use my_prec
+  use matrixopr
 contains
 
   ! Процедура, проверяющая диагональное преобладание в матрице
@@ -20,22 +21,28 @@ contains
   !------------------Метод Якоби------------------------------!
   subroutine jakob_method(A, B, X)
     integer(mp) :: i, j, n
-    real(mp) ::  norm_x ! норма разности X на к-м и (к-1)-м шаге
+    real(mp) ::  norm_x, tmp
     real(mp), dimension(:,:) :: A
     real(mp), dimension(:) :: B, X
     real(mp), allocatable, dimension(:) :: G
-    real(mp), allocatable, dimension(:,:) ::  Z
+    real(mp), allocatable, dimension(:,:) ::  Z, Z_r
 
     n = size(A(1,:))
     call check_diagonal_dominance(A,n)
 
-    allocate(Z(n,n))
+    allocate(Z(n,n)); allocate(Z_r(n,n))
     allocate(G(n))
 
 
     ! Посчитаем матрицу Z = D^(-1)*(D − A)
-    Z = 0
+    Z = 0; Z_r = 0
     forall(i = 1:n, j = 1:n, i .ne. j) Z(i,j) = -A(i,j)/A(i,i)
+
+    do i = 1,n
+       do j = i+1,n
+          Z_r(i,j) = Z(i,j)
+       end do
+    end do
 
     !Посчитаем теперь ыектор G
     forall(i = 1:n) G(i) = B(i)/A(i,i)
@@ -46,6 +53,7 @@ contains
 
     do while(norm_x > eps)
        norm_x = sqrt(sum((matmul(Z,X)+G-X)**2))
+       norm_x = norm_x*matr_norm(Z_r)/abs(1-matr_norm(Z))
        X = matmul(Z,X)+G
     end do
 
@@ -60,21 +68,27 @@ contains
     real(mp), dimension(:,:) :: A
     real(mp), dimension(:) :: B, X
     real(mp), allocatable, dimension(:) :: Q, prevX
-    real(mp), allocatable, dimension(:,:) ::  P
+    real(mp), allocatable, dimension(:,:) ::  P, P_r
 
     n = size(A(1,:))
 
     call check_diagonal_dominance(A,n)
     allocate(Q(n))
-    allocate(P(n,n))
+    allocate(P(n,n)); allocate(P_r(n,n))
     allocate(prevX(n))
 
 
     forall(i = 1:n, j = 1:n) P(i,j) = -A(i,j)/A(i,i)
     forall(i = 1:n) Q(i) = B(i)/A(i,i)
 
+    do i = 1,n
+       do j = i+1,n
+          P_r(i,j) = P(i,j)
+       end do
+    end do
+
     norm_x = 1
-    X = 0
+    X = 1
     do while(norm_x > eps)
        prevX = X
        do i = 1,n
@@ -82,6 +96,7 @@ contains
        end do
 
        norm_x = sqrt(sum((X-prevX)**2))
+       norm_x = norm_x*matr_norm(P_r)/abs(1-matr_norm(P))
     end do
   end subroutine seidel_method
 

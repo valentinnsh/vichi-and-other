@@ -22,6 +22,21 @@ contains
     end do
   end subroutine read_matrix
 
+  function matr_norm(M) result(res)
+    integer(mp) :: id, i, n
+    real(mp), dimension(:,:) :: M
+    real(mp) :: tmp, res
+    n = size(M(1,:))
+
+    do j = 1,n
+       tmp = 0
+       do i = 1,n
+          tmp = tmp + abs(M(i,j))
+       end do
+       if(tmp > res) res = tmp
+    end do
+  end function matr_norm
+
   ! Процедура производит LU  разложение матрицы А !
   ! P - матрица перестановок, для решения СЛАУ    !
   ! swaps - значение четности числа перестановок  !
