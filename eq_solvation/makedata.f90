@@ -31,8 +31,8 @@ contains
   end subroutine make_data
 
   subroutine make_diag_data(n,q)
-    integer(mp) i, j, id, n, q
-    real(mp) tmp, sum
+    integer(mp) i, j, id, n
+    real(mp) tmp, sum, q
     real(mp), allocatable, dimension(:,:) :: matrix
     real(mp), allocatable, dimension(:) :: vector
     id = 10
@@ -45,7 +45,7 @@ contains
 
 
     do i = 1, n
-       sum = -matrix(i,i)
+       sum = -abs(matrix(i,i))
        do j = 1,n
           sum = sum + abs(matrix(i,j))
        end do

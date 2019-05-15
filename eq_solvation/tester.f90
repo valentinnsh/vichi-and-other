@@ -47,6 +47,12 @@ program Task_1
 
   id = 200
   open(id, file = 'result.dat')
+  write(id,*) 'L:'
+  call print_matrix(id,n,L)
+
+  write(id,*) 'U:'
+  call print_matrix(id,n,U)
+
   write(id,*) 'check LU - PA = :'
   call print_matrix(id,n,matmul(L,U)-matmul(P,A))
   write(id,*) 'det(A) = ', determinant(A)
@@ -66,7 +72,7 @@ program Task_1
 
   close(id)
 
-  size = 5; q = 4
+  size = 5; q = 1.1
   call make_diag_data(size,q)
 
   open(id, file='data_diag.dat')
