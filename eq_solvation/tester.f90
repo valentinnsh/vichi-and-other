@@ -12,8 +12,8 @@ program Task_1
 
   real(mp), allocatable, dimension(:,:) :: A, decA, P, L, U
   real(mp), allocatable, dimension(:) :: B,X,X_j,X_s
-  real(mp) :: tmp
-  integer(mp) ::  i, j, n, id, swaps, size, q
+  real(mp) :: tmp, q
+  integer(mp) ::  i, j, n, id, swaps, size
 
   id = 100
   size = 5
