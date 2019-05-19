@@ -35,3 +35,6 @@
 *.exe
 *.out
 *.app
+
+/newton/matrixopr.f90
+/newton/my_prec.f90
