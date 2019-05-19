@@ -78,4 +78,35 @@ contains
 
   end function calc_jacobian
 
+
+  ! Classic Newton method !
+  subroutine newton_method(X, iter_num)
+    real(mp), dimension(:) :: X
+    real(mp), allocatable, dimension(:,:) :: matr, decm, P, jac
+    real(mp), allocatable, dimension(:) :: prev
+    integer(mp) :: swaps
+    integer :: iter_num, i, k, j, n
+
+    iter_num = 0
+    n = size(X)
+    allocate(prev(n));
+    allocate(matr(n,n));allocate(decm(n,n));allocate(P(n,n)); allocate(jac(n,n))
+    ! initial approximation !
+
+    X = 0; prev = (/0.5_mp, 0.5_mp, 1.5_mp, -1.0_mp, -0.5_mp, 1.5_mp, 0.5_mp, -0.5_mp, 1.5_mp, -1.5_mp/)
+
+    decm = 0; P = 0
+
+    do while(sqrt(sum((X-prev)**2)) > eps)
+       jac = calc_jacobian(prev)
+       call decompose_LU(jac, P, swaps)
+       prev = X
+
+       X = prev - matmul(invert_matrix(jac, P), calc_fun_vector(prev))
+       iter_num = iter_num + 1
+    end do
+  end subroutine newton_method
+
+
+
 end module newton_methods
