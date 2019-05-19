@@ -72,7 +72,7 @@ program Task_1
 
   close(id)
 
-  size = 5; q = 1.1
+  size = 5; q = 1.0001
   call make_diag_data(size,q)
 
   open(id, file='data_diag.dat')
