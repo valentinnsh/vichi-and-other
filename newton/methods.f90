@@ -83,23 +83,18 @@ contains
   ! Classic Newton method !
   subroutine newton_method(X, iter_num)
     real(mp), dimension(:) :: X
-    real(mp), allocatable, dimension(:,:) :: decm, P, jac
+    real(mp), allocatable, dimension(:,:) :: P, jac
     real(mp), allocatable, dimension(:) :: prev
     integer(mp) :: swaps
-    integer :: iter_num, i, k, j, n
+    integer :: iter_num, i, n
 
-    real(mp), dimension(1:10,1:10) :: L, U
     iter_num = 0
-    n = 10
-    L = 0; U = 0;
-    allocate(prev(n));
-    allocate(decm(n,n));allocate(P(n,n)); allocate(jac(n,n))
+    n = size(X)
+    allocate(prev(n));allocate(P(n,n)); allocate(jac(n,n))
     jac = 0
     ! initial approximation !
 
     prev = 5;X  = (/0.5_mp, 0.5_mp, 1.5_mp, -1.0_mp, -0.5_mp, 1.5_mp, 0.5_mp, -0.5_mp, 1.5_mp, -1.5_mp/)
-
-    decm = 0; P = 0
 
     do while(sqrt(sum((X-prev)**2)) > eps)
        prev = X
@@ -120,6 +115,30 @@ contains
     real(mp), allocatable, dimension(:) :: prev
     integer(mp) :: swaps
     integer :: iter_num, i, k, j, n
+
+    iter_num = 0
+    n = size(X)
+    allocate(prev(n));allocate(P(n,n)); allocate(jac(n,n))
+    jac = 0
+    ! initial approximation !
+
+    prev = 5;X  = (/0.5_mp, 0.5_mp, 1.5_mp, -1.0_mp, -0.5_mp, 1.5_mp, 0.5_mp, -0.5_mp, 1.5_mp, -1.5_mp/)
+
+    do while(iter_num < k)
+       prev = X
+
+       jac = calc_jacobian(prev)
+
+       P = 0; swaps = 0
+       call decompose_LU(jac, P, swaps)
+       jac = invert_matrix(jac, P)
+       X = prev - matmul(jac, calc_fun_vector(prev))
+       iter_num = iter_num + 1
+    end do
+    do while(sqrt(sum((X-prev)**2)) > eps)
+       X = prev - matmul(jac,calc_fun_vector(prev))
+       iter_num = iter_num + 1
+    end do
 
   end subroutine modified_newton_method
 
