@@ -23,6 +23,9 @@ program DEFAULT_NAME
   write(id,'(F16.8)')  X
   write(id,*) iter_num, ' iterations'
 
+  write(id,*) 'check: system(x) = '
+  write(id,'(F16.8)')  calc_fun_vector(X)
+
   close(id)
 
 end program DEFAULT_NAME
