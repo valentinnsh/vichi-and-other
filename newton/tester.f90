@@ -16,12 +16,13 @@ program DEFAULT_NAME
 
   call newton_method(X, iter_num)
 
-  id = 10
-  open(id, file = 'result.dat')
+  id = 100
+  open(id, file = 'result.dat', action = 'write')
 
   write(id,*)'_Classic Newton method_ '
   write(id,'(F16.8)')  X
   write(id,*) iter_num, ' iterations'
 
   close(id)
+
 end program DEFAULT_NAME
