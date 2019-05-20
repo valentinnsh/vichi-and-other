@@ -10,7 +10,7 @@ program DEFAULT_NAME
   use newton_methods
   implicit none
 
-  real(mp), dimension(10) :: X
+  real(mp), dimension(10) :: X, X1
   real(mp) :: t1,t2 !timers
   integer :: iter_num, i, k
   integer(mp) :: id
@@ -22,7 +22,7 @@ program DEFAULT_NAME
   call newton_method(X, iter_num)
   call cpu_time(t2)
 
-  write(id,*)'_Classic Newton method_ '
+  write(id,*)'Classic Newton method: '
   write(id,'(F16.8)')  X
   write(id,*) iter_num, ' iterations '
   write(id,'(F16.8)', advance = "no") t2-t1
@@ -31,15 +31,31 @@ program DEFAULT_NAME
   write(id,*) 'check: system(x) = '
   write(id,'(F16.8)')  calc_fun_vector(X)
 
-  do i = 1,5
-     call cpu_time(t1)
-     call modified_newton_method(X, iter_num,i)
-     call cpu_time(t2)
+  write(id,*) 'Modified method:'
 
-     write(id,*) 'k = ', i
-     write(id, '(F16.8)', advance = 'no') t2 - t1
-     write(id,*) 'seconds'
-  end do
+  ! Optimal k for modified is 3 !
+  !do i = 1,5
+  call cpu_time(t1)
+  call modified_newton_method(X, iter_num,3)
+  call cpu_time(t2)
+  write(id,*) iter_num, 'iterations'
+  write(id,*) 'k = ', 3
+  write(id, '(F16.8)', advance = "no") t2 - t1
+  write(id,*) 'seconds'
+  !end do
+
+  ! Optimal k for hybrid is 2 !
+  write(id,*) 'Hybrid method: '
+  !do i = 1,5
+  call cpu_time(t1)
+  call hybrid_newton_method(X, iter_num,2)
+  call cpu_time(t2)
+  write(id,*) iter_num, 'iterations'
+  write(id,*) 'k = ', 2
+  write(id, '(F16.8)', advance = 'no') t2 - t1
+  write(id,*) 'seconds'
+  !end do
+
   close(id)
 
 end program DEFAULT_NAME

@@ -124,6 +124,7 @@ contains
 
     prev = 5;X  = (/0.5_mp, 0.5_mp, 1.5_mp, -1.0_mp, -0.5_mp, 1.5_mp, 0.5_mp, -0.5_mp, 1.5_mp, -1.5_mp/)
 
+    ! classic algorithm first k operations
     do while(iter_num < k)
        prev = X
 
@@ -135,6 +136,7 @@ contains
        X = prev - matmul(jac, calc_fun_vector(prev))
        iter_num = iter_num + 1
     end do
+    ! modified method
     do while(sqrt(sum((X-prev)**2)) > eps)
        prev = X
        X = prev - matmul(jac,calc_fun_vector(prev))
@@ -142,5 +144,37 @@ contains
     end do
 
   end subroutine modified_newton_method
+
+  ! hibrid method
+  subroutine hybrid_newton_method(X, iter_num, k)
+    real(mp), dimension(:) :: X
+    real(mp), allocatable, dimension(:,:) :: decm, P, jac
+    real(mp), allocatable, dimension(:) :: prev
+    integer(mp) :: swaps
+    integer :: iter_num, i, k, j, n
+
+    iter_num = 0
+    n = size(X)
+    allocate(prev(n));allocate(P(n,n)); allocate(jac(n,n))
+    jac = 0
+    ! initial approximation !
+
+    prev = 5;X  = (/0.5_mp, 0.5_mp, 1.5_mp, -1.0_mp, -0.5_mp, 1.5_mp, 0.5_mp, -0.5_mp, 1.5_mp, -1.5_mp/)
+
+
+    do while(sqrt(sum((X-prev)**2)) > eps)
+       prev = X
+       jac = calc_jacobian(prev)
+
+       P = 0; swaps = 0
+       call decompose_LU(jac, P, swaps)
+       jac = invert_matrix(jac, P)
+       do i = 1, k
+          prev = X
+          X = prev - matmul(jac,calc_fun_vector(prev))
+          iter_num = iter_num + 1
+       end do
+    end do
+  end subroutine hybrid_newton_method
 
 end module newton_methods
