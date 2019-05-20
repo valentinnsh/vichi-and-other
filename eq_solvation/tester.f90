@@ -13,11 +13,11 @@ program Task_1
   real(mp), allocatable, dimension(:,:) :: A, decA, P, L, U
   real(mp), allocatable, dimension(:) :: B,X,X_j,X_s
   real(mp) :: tmp, q
-  integer(mp) ::  i, j, n, id, swaps, size
+  integer(mp) ::  i, j, n, id, swaps, size_v
 
   id = 100
-  size = 5
-  call make_data(size)
+  size_v = 10
+  call make_data(size_v)
   open(id, file='data.dat')
   read(id,'(2x,I6)') n
 
@@ -72,8 +72,8 @@ program Task_1
 
   close(id)
 
-  size = 5; q = 1.0001
-  call make_diag_data(size,q)
+  size_v = 10; q = 1.001
+  call make_diag_data(size_v,q)
 
   open(id, file='data_diag.dat')
   read(id,'(2x,I6)') n

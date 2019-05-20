@@ -32,7 +32,7 @@ contains
   end function calc_fun_vector
 
   function calc_jacobian(x) result (j)
-    real(mp), dimension(:) :: X
+    real(mp), dimension(:) :: x
     real(mp), allocatable, dimension(:,:) :: j
 
     allocate(j(10,10)); j = 0
@@ -93,16 +93,27 @@ contains
     allocate(matr(n,n));allocate(decm(n,n));allocate(P(n,n)); allocate(jac(n,n))
     ! initial approximation !
 
-    X = 0; prev = (/0.5_mp, 0.5_mp, 1.5_mp, -1.0_mp, -0.5_mp, 1.5_mp, 0.5_mp, -0.5_mp, 1.5_mp, -1.5_mp/)
+    prev = 5;X  = (/0.5_mp, 0.5_mp, 1.5_mp, -1.0_mp, -0.5_mp, 1.5_mp, 0.5_mp, -0.5_mp, 1.5_mp, -1.5_mp/)
 
     decm = 0; P = 0
 
     do while(sqrt(sum((X-prev)**2)) > eps)
-       jac = calc_jacobian(prev)
-       call decompose_LU(jac, P, swaps)
        prev = X
 
-       X = prev - matmul(invert_matrix(jac, P), calc_fun_vector(prev))
+       jac = calc_jacobian(prev)
+       !write(*,*) jac
+       decm = jac
+       write(*,*) '----'
+
+       P = 0; swaps = 0
+       call decompose_LU(decm, P, swaps)
+
+
+       write(*,*) matmul(invert_matrix(decm, P),jac)
+       write(*,*) '----'
+       !write(*,*) calc_fun_vector(prev)
+
+       X = prev - matmul(invert_matrix(decm, P), calc_fun_vector(prev))
        iter_num = iter_num + 1
     end do
   end subroutine newton_method

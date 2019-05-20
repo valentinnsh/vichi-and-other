@@ -32,7 +32,7 @@ contains
 
   subroutine make_diag_data(n,q)
     integer(mp) i, j, id, n
-    real(mp) tmp, sum, q
+    real(mp) tmp, sum_v, q
     real(mp), allocatable, dimension(:,:) :: matrix
     real(mp), allocatable, dimension(:) :: vector
     id = 10
@@ -45,11 +45,11 @@ contains
 
 
     do i = 1, n
-       sum = -abs(matrix(i,i))
+       sum_v = -abs(matrix(i,i))
        do j = 1,n
-          sum = sum + abs(matrix(i,j))
+          sum_v = sum_v + abs(matrix(i,j))
        end do
-       matrix(i,i) = sum*q
+       matrix(i,i) = sum_v*q
     end do
 
     call print_matrix(id, n, matrix)
