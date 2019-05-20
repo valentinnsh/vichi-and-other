@@ -15,6 +15,8 @@ program DEFAULT_NAME
   integer :: iter_num, i, k
   integer(mp) :: id
 
+  X  = (/0.5_mp, 0.5_mp, 1.5_mp, -1.0_mp, -0.5_mp, 1.5_mp, 0.5_mp, -0.5_mp, 1.5_mp, -1.5_mp/)
+  X1  = (/0.5_mp, 0.5_mp, 1.5_mp, -1.0_mp, -0.2_mp, 1.5_mp, 0.5_mp, -0.5_mp, 1.5_mp, -1.5_mp/)
   id = 100
   open(id, file = 'result.dat', action = 'write')
 

@@ -94,7 +94,7 @@ contains
     jac = 0
     ! initial approximation !
 
-    prev = 5;X  = (/0.5_mp, 0.5_mp, 1.5_mp, -1.0_mp, -0.5_mp, 1.5_mp, 0.5_mp, -0.5_mp, 1.5_mp, -1.5_mp/)
+    prev = 5
 
     do while(sqrt(sum((X-prev)**2)) > eps)
        prev = X
@@ -122,7 +122,7 @@ contains
     jac = 0
     ! initial approximation !
 
-    prev = 5;X  = (/0.5_mp, 0.5_mp, 1.5_mp, -1.0_mp, -0.5_mp, 1.5_mp, 0.5_mp, -0.5_mp, 1.5_mp, -1.5_mp/)
+    prev = 5
 
     ! classic algorithm first k operations
     do while(iter_num < k)
@@ -159,7 +159,7 @@ contains
     jac = 0
     ! initial approximation !
 
-    prev = 5;X  = (/0.5_mp, 0.5_mp, 1.5_mp, -1.0_mp, -0.5_mp, 1.5_mp, 0.5_mp, -0.5_mp, 1.5_mp, -1.5_mp/)
+    prev = 5;
 
 
     do while(sqrt(sum((X-prev)**2)) > eps)
