@@ -12,7 +12,7 @@ program DEFAULT_NAME
 
   real(mp), dimension(10) :: X
   real(mp) :: t1,t2 !timers
-  integer :: iter_num
+  integer :: iter_num, i, k
   integer(mp) :: id
 
   id = 100
@@ -31,6 +31,15 @@ program DEFAULT_NAME
   write(id,*) 'check: system(x) = '
   write(id,'(F16.8)')  calc_fun_vector(X)
 
+  do i = 1,5
+     call cpu_time(t1)
+     call modified_newton_method(X, iter_num,i)
+     call cpu_time(t2)
+
+     write(id,*) 'k = ', i
+     write(id, '(F16.8)', advance = 'no') t2 - t1
+     write(id,*) 'seconds'
+  end do
   close(id)
 
 end program DEFAULT_NAME

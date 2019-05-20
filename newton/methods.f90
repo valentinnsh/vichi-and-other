@@ -136,6 +136,7 @@ contains
        iter_num = iter_num + 1
     end do
     do while(sqrt(sum((X-prev)**2)) > eps)
+       prev = X
        X = prev - matmul(jac,calc_fun_vector(prev))
        iter_num = iter_num + 1
     end do
