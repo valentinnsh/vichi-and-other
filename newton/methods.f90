@@ -105,6 +105,11 @@ contains
        call decompose_LU(jac, P, swaps)
        X = prev - matmul(invert_matrix(jac, P), calc_fun_vector(prev))
        iter_num = iter_num + 1
+
+       if(iter_num > 2000) then
+          print*, 'Метод разошелся'
+          return
+       end if
     end do
   end subroutine newton_method
 
@@ -135,12 +140,22 @@ contains
        jac = invert_matrix(jac, P)
        X = prev - matmul(jac, calc_fun_vector(prev))
        iter_num = iter_num + 1
+
+       if(iter_num > 2000) then
+          print*, 'Метод разошелся'
+          return
+       end if
     end do
     ! modified method
     do while(sqrt(sum((X-prev)**2)) > eps)
        prev = X
        X = prev - matmul(jac,calc_fun_vector(prev))
        iter_num = iter_num + 1
+
+       if(iter_num > 2000) then
+          print*, 'Метод разошелся'
+          return
+       end if
     end do
 
   end subroutine modified_newton_method
@@ -174,6 +189,12 @@ contains
           X = prev - matmul(jac,calc_fun_vector(prev))
           iter_num = iter_num + 1
        end do
+
+       if(iter_num > 2000) then
+          print*, 'Метод разошелся'
+          return
+       end if
+
     end do
   end subroutine hybrid_newton_method
 
