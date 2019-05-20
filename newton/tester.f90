@@ -24,8 +24,8 @@ program DEFAULT_NAME
 
   write(id,*)'_Classic Newton method_ '
   write(id,'(F16.8)')  X
-  write(id,*) iter_num, ' iterations ',
-  write(id,'F16.8', append = 'no')t2-t1
+  write(id,*) iter_num, ' iterations '
+  write(id,'(F16.8)', advance = "no") t2-t1
   write(id,*) 'seconds'
 
   write(id,*) 'check: system(x) = '

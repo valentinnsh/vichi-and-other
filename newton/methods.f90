@@ -105,17 +105,22 @@ contains
        prev = X
 
        jac = calc_jacobian(prev)
-       decm = jac
 
        P = 0; swaps = 0
-       call decompose_LU(decm, P, swaps)
-
-       X = prev - matmul(invert_matrix(decm, P), calc_fun_vector(prev))
-
+       call decompose_LU(jac, P, swaps)
+       X = prev - matmul(invert_matrix(jac, P), calc_fun_vector(prev))
        iter_num = iter_num + 1
     end do
   end subroutine newton_method
 
+  ! Modified newton method
+  subroutine modified_newton_method(X, iter_num, k)
+    real(mp), dimension(:) :: X
+    real(mp), allocatable, dimension(:,:) :: decm, P, jac
+    real(mp), allocatable, dimension(:) :: prev
+    integer(mp) :: swaps
+    integer :: iter_num, i, k, j, n
 
+  end subroutine modified_newton_method
 
 end module newton_methods
