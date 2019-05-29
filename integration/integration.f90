@@ -26,13 +26,13 @@ contains
 
 
   ! Calculating quadratura coefficients !
-  function calc_quadr_coef(z0,z1,al, h, a) result(res)
-    real(mp) :: res, z0,z1,al,h, a
+  function calc_quadr_coef(z0,z1,al, a) result(res)
+    real(mp) :: res, z0,z1,al, a
     real(mp) :: zc ! center of [z0,z1]
     real(mp), dimension(0:2) :: m
-    real(mp), dimension(1:3)Ai
+    real(mp), dimension(1:3) :: Ai
 
-    moments = calc_moments(z0, z1, al, a)
+    m = calc_moments(z0, z1, al, a)
     zc = (z1+z0)/2
 
     Ai(1) = (m(2) - m(1)*(zc+z1) + m(0)*zc*z1)/(zc-z0)/(z1-z0)
@@ -50,11 +50,12 @@ contains
   end function richards
 
 
-  function newton_koss(a, b, alpha,l) result(res)
+  function newton_koss(a, b, al, l) result(res)
     real(mp), dimension(1:3) :: moments
-    real(mp) :: b, alpha, a, s1, s2, s3, l, res, h
+    real(mp) :: b, al, a, s1, s2, s3, l, res, h
     integer(mp) :: k, i, j
 
+    res = calc_quadr_coef(a,b,al, a)
   end function newton_koss
 
 
