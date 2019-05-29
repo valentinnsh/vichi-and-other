@@ -88,4 +88,9 @@ contains
   end function newton_kots
 
 
+  !---------------------------------------!
+  !           GAUSS   METHOD              !
+  !---------------------------------------!
+
+
 end module integration
