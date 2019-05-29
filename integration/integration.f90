@@ -55,7 +55,6 @@ contains
   end function calc_step_newt_kots_cqf
 
   function newton_kots(a, b, al, l) result(res)
-    real(mp), dimension(1:3) :: m
     real(mp) :: b, al, a, s1, s2, s3, l, res, h
     integer(mp) :: k, i, j
 
@@ -92,5 +91,74 @@ contains
   !           GAUSS   METHOD              !
   !---------------------------------------!
 
+  function calc_gauss_moments(z0, z1, al, a) result(m)
+    real(mp), dimension(0:3) :: m
+    real(mp) :: z1, z0, al, a
 
+    m(0) = (z1-z0)**(1-al)/(1-al)
+
+    m(1) = ((z1-a)**(1-al)*(a-z1*(1-al)) - (z0-a)**(1-al)*(a-z0*(1-al)))/(1-al)/(2-al)
+
+    m(2) = (z0-a)**(1-al)*(2*a**2+2*a*z0*(1-al))+z0**2*(1-al)*(2-al)
+    m(2) = (m(2) - (z1-a)**(1-al)*(2*a**2+2*a*z1*(1-al))+z1**2*(1-al)*(2-al))/(al-3)/(al-2)/(al-1)
+
+    m(3) = ((z1-a)**(1-al)*(6*a**3-6*a**2*z1*(al-1)+3*a*z1**2*(1-al)*(2-al)+z1**3*(1-al)*(2-al)*(3-al)))
+    m(3) = m(3) - ((z0-a)**(1-al)*(6*a**3-6*a**2*z0*(al-1)+3*a*z0**2*(1-al)*(2-al)+z0**3*(1-al)*(2-al)*(3-al)))
+    m(3) = m(3)/(al-4)/(al-3)/(al-2)/(al-1)
+
+  end function calc_gauss_moments
+
+  function calc_step_gauss_cqf(z0,z1,al, a) result(res)
+    real(mp) :: res, z0,z1,al, a
+    real(mp) :: r1, r0 ! коэффициенты узлового многочлена
+    real(mp) :: t1, t0
+    real(mp) :: zc ! center of [z0,z1]
+    real(mp), dimension(0:3) :: m
+    real(mp), dimension(1:2) :: Ai
+
+    m = calc_gauss_moments(z0,z1,al,a)
+
+    r0 = (m(2)**2-m(1)*m(3))/(m(1)**2-m(0)*m(2))
+    r1 = (m(0)*m(3)-m(1)*m(2))/(m(1)**2-m(0)*m(2))
+
+    t0 = 0.5*(-r1 - sqrt(r1**2-4*r0))
+    t1 = 0.5*(-r1 + sqrt(r1**2-4*r0))
+
+    Ai(1) = (m(1)-m(0)*t1)/(t0-t1)
+    Ai(2) = m(0) - Ai(1)
+
+    res = Ai(1)*f(z0) + Ai(2)*f(z1)
+  end function calc_step_gauss_cqf
+
+  function gauss_integration(a, b, al, l) result(res)
+    real(mp) :: b, al, a, s1, s2, s3, l, res, h
+    integer(mp) :: k, i, j
+
+    h = (b-a)/2
+    s1 = calc_step_newt_kots_cqf(a,b,al,a)
+
+    h = h/2
+    s2 = calc_step_newt_kots_cqf(a, a+h, al, a) + calc_step_newt_kots_cqf(a+h,b,al,a)
+
+    h = h/2; i = 0; s3 = 0
+    do while((a+h*i) < b)
+       i = i + 1
+       s3 = s3 + calc_step_newt_kots_cqf(a+(i-1)*h, a+i*h,al,a)
+    end do
+
+    do while(richardson(s1,s2,s3) > eps)
+       s1 = s2; s2 = s3;
+
+       h = h/2; i = 0; s3 = 0
+       do while((a+h*i) < b)
+          i = i + 1
+          s3 = s3 + calc_step_gauss_cqf(a+(i-1)*h, a+i*h,al,a)
+       end do
+    end do
+
+    res = s3
+    !print *, richards(s1,s2,s3)
+    !print *, s1, s2, s3
+    !res = calc_quadr_coef(a,b,al, a)
+  end function gauss_integration
 end module integration

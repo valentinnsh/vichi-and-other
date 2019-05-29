@@ -14,5 +14,6 @@ program DEFAULT_NAME
   true_res = 8.56553
 
   print *, newton_kots(1.1_mp,2.3_mp,0.4_mp,2.0_mp)
+  print *, gauss_integration(1.1_mp,2.3_mp,0.4_mp,2.0_mp)
 
 end program DEFAULT_NAME
