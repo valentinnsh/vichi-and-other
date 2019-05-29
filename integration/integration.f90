@@ -15,13 +15,13 @@ contains
   end function f
 
   ! Calculating function moments
-  function calc_moments(l, r, alpha, a) result(moments)
-    real(mp), dimension(1:3) :: moments
-    real(mp) :: l, r, alpha, a
+  function calc_moments(z0, z1, al, a) result(m)
+    real(mp), dimension(0:2) :: m
+    real(mp) :: z1, z0, al, a
 
-    moments(1) = ((r-a)**(1-alpha) - (l-a)**(1-alpha))/(1-alpha)
-    moments(2) = ((r-a)**(2-alpha) - (l-a)**(2-alpha))/(2-alpha) + a*moments(1)
-    moments(3) = ((r-a)**(3-alpha) - (l-a)**(3-alpha))/(3-alpha) + 2*a*moments(2) - a**2*moments(1)
+    m(0) = ((z1-a)**(1-al) - (z0-a)**(1-al))/(1-al)
+    m(1) = ((z1-a)**(2-al) - (z0-a)**(2-al))/(2-al) + a*m(0)
+    m(2) = ((z1-a)**(3-al) - (z0-a)**(3-al))/(3-al) + 2*a*m(1) - a*a*m(0)
   end function calc_moments
 
 
