@@ -43,11 +43,11 @@ contains
 
 
   ! Richards checking
-  function richards(s1, s2, s3) result(res)
+  function richardson(s1, s2, s3) result(res)
     real(mp) :: res, s3,s2, s1
 
     res = abs((s3-s2)**2/(2*s2-s3-s1))
-  end function richards
+  end function richardson
 
 
   function newton_kots(a, b, al, l) result(res)
@@ -67,7 +67,7 @@ contains
        s3 = s3 + calc_step_cqf(a+(i-1)*h, a+i*h,al,a)
     end do
 
-    do while(richards(s1,s2,s3) > eps)
+    do while(richardson(s1,s2,s3) > eps)
        s1 = s2; s2 = s3;
 
        h = h/2; i = 0; s3 = 0
