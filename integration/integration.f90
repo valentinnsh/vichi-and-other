@@ -14,7 +14,7 @@ contains
     res = 0.5_mp*cos(3.0_mp*x)*exp(0.4_mp*x) + 4.0_mp*sin(3.5_mp*x)*exp(-3.0_mp*x) + 3.0_mp*x
   end function f
 
-  ! Calculating function moments
+  ! Calculating function moments !
   function calc_moments(z0, z1, al, a) result(m)
     real(mp), dimension(0:2) :: m
     real(mp) :: z1, z0, al, a
@@ -25,21 +25,21 @@ contains
   end function calc_moments
 
 
-  !
-  function calc_step_skf(z0,z1,alpha, h, a) result(res)
-    real(mp) :: res, z0,z1,alpha,h, a
-    real(mp), dimension(1:3) :: moments, Ai
+  ! Calculating quadratura coefficients !
+  function calc_quadr_coef(z0,z1,al, h, a) result(res)
+    real(mp) :: res, z0,z1,al,h, a
+    real(mp) :: zc ! center of [z0,z1]
+    real(mp), dimension(0:2) :: m
+    real(mp), dimension(1:3)Ai
 
-    moments = calc_moments(z0, z1, alpha, a)
+    moments = calc_moments(z0, z1, al, a)
+    zc = (z1+z0)/2
 
-    Ai(1) = moments(3) - moments(2)*((z0+h)+z1)+moments(1)*z1*(z0+h)
-    Ai(1) = Ai(1)/(z0+h - z0)/(z1-z0)
-    Ai(2) = -(moments(3)-moments(2)*(z0+z1)+moments(1)*z0*z1)/h/(z1-z0-h)
-    Ai(3) = (moments(3)-moments(2)*(z0+h+z0)+moments(1)*(z0+h)*z0)/(z1-z0-h)/(z1-z0)
-
-
-    res = Ai(1)*f(z0) + Ai(2)*f(z0+h) + Ai(3)*f(z1)
-  end function calc_step_skf
+    Ai(1) = (m(2) - m(1)*(zc+z1) + m(0)*zc*z1)/(zc-z0)/(z1-z0)
+    Ai(2) = -(m(2)-m(1)*(z1+z0)+m(0)*z1*z0)/(zc-z0)/(z1-zc)
+    Ai(3) = (m(2) - m(1)*(zc+z0) + m(0)*zc*z0)/(z1-zc)/(z1-z0)
+    res = Ai(1)*f(z0) + Ai(2)*f(zc) + Ai(3)*f(z1)
+  end function calc_quadr_coef
 
 
   ! Richards checking
