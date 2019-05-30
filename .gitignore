@@ -38,3 +38,5 @@
 
 /newton/matrixopr.f90
 /newton/my_prec.f90
+/integration/matrixopr.f90
+/integration/my_prec.f90
